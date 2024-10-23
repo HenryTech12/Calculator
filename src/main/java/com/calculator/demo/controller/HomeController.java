@@ -4,8 +4,10 @@ import java.util.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import com.calculator.demo.service.*;
 
 @Controller
 public class HomeController {
@@ -17,6 +19,8 @@ public class HomeController {
       private String res2 ="";
       private String res = "";
       private String a = "hello";
+      @Autowired
+      private CalculatorService service;
      
    @RequestMapping("/home")
     public ModelAndView calculate(String del, String operator, String dot, String number) {
@@ -53,35 +57,35 @@ public class HomeController {
                         if(store_num1 != "" && store_num2 != "") {
                              num1 = Double.parseDouble(store_num1);
                              num2 = Double.parseDouble(store_num2);
-                             result = num1 + num2;
+                             result = service.add(num1,num2);
                         }
                         break;
                      case "-":
                         if(store_num1 != "" && store_num2 != "") {
                              num1 = Double.parseDouble(store_num1);
                              num2 = Double.parseDouble(store_num2);
-                             result = num1 - num2;
+                             result = service.subtract(num1,num2);
                         }
                         break;
                       case "*":
                          if(store_num1 != "" && store_num2 != "") {
                              num1 = Double.parseDouble(store_num1);
                              num2 = Double.parseDouble(store_num2);
-                             result = num1 * num2;
+                             result = service.multiply(num1,num2);
                         }
                          break;
                        case "/":
                          if(store_num1 != "" && store_num2 != "") {
                              num1 = Double.parseDouble(store_num1);
                              num2 = Double.parseDouble(store_num2);
-                             result = num1 / num2;
+                             result = service.divide(num1,num2);
                         }
                        break;
                       case "%":
                          if(store_num1 != "" && store_num2 != "") {
                              num1 = Double.parseDouble(store_num1);
                              num2 = Double.parseDouble(store_num2);
-                             result = num1 % num2;
+                             result = service.getMod(num1,num2);
                         }
                        break;
                       case "C":
@@ -124,7 +128,7 @@ public class HomeController {
      
           if(del != null) {
              if(store_num1 != "" && opt == "") {    
-                     String str = delete(store_num1);      
+                     String str = service.delete(store_num1);      
                      store_num1 = str;
                      res1 = store_num1;
                      res = res1 + "" + opt + "" + res2;
@@ -132,7 +136,7 @@ public class HomeController {
             }
            if(opt != "")   {
                if(store_num2 != "") {
-                    String str = delete(store_num2);
+                    String str = service.delete(store_num2);
                     store_num2 = str;
                     res2 = store_num2;
                     res = res1 + "" + opt + "" + res2;
@@ -150,10 +154,5 @@ public class HomeController {
          return mv;
      }
 
-    public String delete(String str) {
-         StringBuilder sb = new StringBuilder(str);
-         int index = sb.toString().length() - 1;
-         sb.deleteCharAt(index);
-         return sb.toString();
-    }
+    
 }
